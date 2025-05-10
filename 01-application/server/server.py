@@ -2,7 +2,7 @@ import socket
 import os
 from dotenv import load_dotenv
 
-HOST = '127.0.0.1'    
+HOST = '0.0.0.0'    
 HTML_STR = 'index.html'
 
 load_dotenv()  
@@ -15,7 +15,7 @@ def get_host_info():
     return hostname, ip
 
 def render_html(hostname, ip):
-    with open('01-application/index.html', "r",  encoding="utf-8") as file:
+    with open('index.html', "r",  encoding="utf-8") as file:
         html = file.read()
     
     return html \
@@ -26,7 +26,7 @@ def render_html(hostname, ip):
 def start_server():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        s.bind((HOST, PORT))
+        s.bind((HOST, int(PORT)))
         s.listen()
 
         while True:

@@ -1,0 +1,2 @@
+docker build -t sdanils/exho-server_image:echo_server .
+docker push sdanils/exho-server_image:echo_server
