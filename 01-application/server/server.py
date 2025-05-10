@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 
 HOST = '0.0.0.0'    
-HTML_STR = 'index.html'
+HTML_STR = 'server/index.html'
 
 load_dotenv()  
 AUTHOR = os.getenv("AUTHOR") 
@@ -15,7 +15,7 @@ def get_host_info():
     return hostname, ip
 
 def render_html(hostname, ip):
-    with open('index.html', "r",  encoding="utf-8") as file:
+    with open(HTML_STR, "r",  encoding="utf-8") as file:
         html = file.read()
     
     return html \
