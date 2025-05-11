@@ -1,0 +1,38 @@
+---
+- name: Nginx load
+  hosts: all  
+  become: yes
+  vars_files:
+  - vars.yml
+
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Remove default symlink
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      ignore_errors: yes  
+
+    - name: Create Nginx config
+      template:
+        src: nginx_balancer.conf.j2
+        dest: /etc/nginx/conf.d/loadbalancer.conf
+        force: yes
+      notify: Restart Nginx
+
+    - name: Test Nginx configuration
+      command: nginx -t
+      register: nginx_test
+      changed_when: false
+      notify: Restart Nginx
+
+  handlers:
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted

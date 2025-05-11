@@ -1,0 +1,30 @@
+---
+- name: Deploy containers 
+  hosts: all 
+  become: true
+  vars_files:
+  - vars.yml
+
+  tasks:
+    - name: Log in Docker
+      community.docker.docker_login:
+        username: "{{ docker_hub_username }}"
+        password: "{{ docker_hub_password }}"
+        state: present
+
+    - name: Pull image
+      community.docker.docker_image:
+        name: "{{ docker_image }}"
+        source: pull
+        state: present
+
+    - name: Start containers
+      community.docker.docker_container:
+        name: "{{ item }}"
+        image: "{{ docker_image }}"
+        state: started
+        restart_policy: unless-stopped
+        ports:
+          - "{{ host_port_start + loop.index0 }}:{{ base_port }}"
+      loop: "{{ container_names }}"
+      

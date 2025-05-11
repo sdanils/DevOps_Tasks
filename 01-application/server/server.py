@@ -1,11 +1,9 @@
 import socket
 import os
-from dotenv import load_dotenv
 
 HOST = '0.0.0.0'    
 HTML_STR = 'server/index.html'
 
-load_dotenv()  
 AUTHOR = os.getenv("AUTHOR") 
 PORT = os.getenv("PORT") 
 
@@ -34,6 +32,7 @@ def start_server():
 
             request = conn.recv(1024).decode()             
             if "GET /favicon.ico" in request:
+                conn.sendall(b"HTTP/1.1 204 No Content\r\n\r\n")
                 conn.close()
                 continue 
 

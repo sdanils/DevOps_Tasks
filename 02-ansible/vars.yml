@@ -1,0 +1,6 @@
+docker_hub_username: "sdanils"
+docker_hub_password: "***" # token Docker hub 
+container_names: ["server_one", "server_two", "server_three"]
+base_port: 8000  
+first_port: 8001  
+docker_image: "sdanils/exho-server_image:echo_server"
