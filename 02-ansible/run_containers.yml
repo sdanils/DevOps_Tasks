@@ -3,28 +3,33 @@
   hosts: all 
   become: true
   vars_files:
-  - vars.yml
+    - vars.yml
 
   tasks:
-    - name: Log in Docker
+    - name: Log in to Docker Hub
       community.docker.docker_login:
         username: "{{ docker_hub_username }}"
         password: "{{ docker_hub_password }}"
         state: present
+      no_log: true 
 
-    - name: Pull image
+    - name: Pull Docker image
       community.docker.docker_image:
         name: "{{ docker_image }}"
         source: pull
         state: present
+        force_source: yes  
 
     - name: Start containers
       community.docker.docker_container:
         name: "{{ item }}"
         image: "{{ docker_image }}"
         state: started
+        env:
+          AUTHOR: "{{ author }}"
         restart_policy: unless-stopped
         ports:
-          - "{{ host_port_start + loop.index0 }}:{{ base_port }}"
+          - "{{ first_port + index }}:{{ base_port }}"
       loop: "{{ container_names }}"
-      
+      loop_control:
+        index_var: index
